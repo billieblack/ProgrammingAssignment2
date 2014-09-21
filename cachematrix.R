@@ -1,14 +1,21 @@
-## Function that creates a special matrix object which is in reality is a list
+## Function that creates a special matrix object in the form of a list
 
 makeCacheMatrix <- function(x = matrix()) {
-m <- NULL
+	# sets the value of mi the inverse of the matrix to NULL
+	# NULL is the default value of im before cacheSolve is used 
+	mi <- NULL
+	# function that sets the value of the matrix 
 	setmatrix <- function(y){
-		x <<- y
-		m <<- NULL
+		x <<- y # caches the inputted matrix so that cacheSolve can check whether it already exits
+		mi <<- NULL # sets the value of mi the inverse of the matrix to NULL
 	}
+	# function that gets the value of the matrix
 	getmatrix <- function() x
-	setmatrinv <- function(solve) m<<- solve
-	getmatrinv <- function() m
+	# function that sets the value of the matrix inverse
+	setmatrinv <- function(solve) mi<<- solve # solve is the R function that computes the inverse of a matrix
+	# function that gets the value of the matrix inverse
+	getmatrinv <- function() mi
+	# special vector in the form of a list that contains the data on the inputted matrix and its inverse 
 	list(setmatrix=setmatrix, getmatrix=getmatrix, setmatrinv=setmatrinv, getmatrinv=getmatrinv)
 }
 
@@ -18,18 +25,23 @@ m <- NULL
 ## If not, cathe cacheSolve function computes, caches and returns it
 
 cacheSolve <- function(x=matrix(), ...) {
-	m<-x$getmatrinv()
-	if(!is.null(m)){
+	# get the inverse of the matrix and put it in mi using the getmatrinv function
+	mi <- x$getmatrinv()
+	# check if a cached matrix inverse already exists
+	# if a cached value of the matrix inverse already exists then return it
+	if(!is.null(mi)){
 		message("getting cached matrix inverse data")
-		return(m)
+		return(mi) # return the cached matrix inverse
 		} else {
-			m <- solve(x$getmatrix())
-			x$setmatrinv(m)
-			return(m)
+			# if a cached value does not exist yet then compute the inverse of the inputted matrix using the getmatrix function
+			mi <- solve(x$getmatrix())
+			# put the inverse of the matrix in mi using the setmatrinv function
+			x$setmatrinv(mi)
+			return(mi)
 			}
 	}
 
 ##I run the functions with the following inputs
-#mat <- matrix(data = c(1,-.25,-.25,1), nrow = 2, ncol = 2)
-#mat2 <- makeCacheMatrix(mat)
-#cacheSolve(mat2)
+#matrin <- matrix(data = c(1,-.25,-.25,1), nrow = 2, ncol = 2)
+#matrin2 <- makeCacheMatrix(matrin)
+#cacheSolve(matrin2)
